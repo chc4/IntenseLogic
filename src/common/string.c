@@ -12,7 +12,7 @@ char *il_Common_toC(const il_Common_String s) {
 
 il_Common_String il_Common_concatfunc(const il_Common_String s, ...) {
 
-  il_Common_String str;
+  il_Common_String str = {0,NULL};
 
   va_list va;
   
@@ -26,11 +26,13 @@ il_Common_String il_Common_concatfunc(const il_Common_String s, ...) {
   
   str.data = (char*)malloc(str.length);
   
+  arg = s;
   va_start(va, s);
   char *p = str.data;
   while (arg.length) {
     strncpy(p, arg.data, arg.length);
     p += arg.length;
+    arg = va_arg(va, il_Common_String);
   }
   va_end(va);
   

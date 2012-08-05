@@ -4,9 +4,10 @@ else
 CC = gcc
 endif
 INCLUDES += -I. -I../include
-CFLAGS += -Wall -DDEBUG -g $(INCLUDES)
+CFLAGS += -Wall -DDEBUG -pg -g $(INCLUDES)
+CFLAGS += -DGLEW_BUILD
 #CFLAGS += -DdDOUBLE
-LDFLAGS += -lm -llua -lSDL -lIL
+LDFLAGS += -pg -g -lm -llua -lSDL -lIL
 
 include @(TUP_PLATFORM).tup
 

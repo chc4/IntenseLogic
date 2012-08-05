@@ -4,7 +4,7 @@
 #include <OpenGL/OpenGL.h>
 #include <OpenGL/gl.h>
 #else
-#include <GL/gl.h>
+#include <GL/glew.h>
 #endif
 
 #include "SDL/SDL.h"
@@ -16,12 +16,16 @@
 #include "common/event.h"
 #include "common/input.h"
 #include "common/matrix.h"
+#include "common/mesh.h"
+#include "graphics/trimesh.h"
+#include "asset/asset.h"
 
 SDL_Surface* canvas;
 int width = 800;
 int height = 600;
 float heights[4] = {100, 0,0,0}; //temp
 il_Graphics_Heightmap* h;
+il_Graphics_Trimesh* trimesh;
 il_Graphics_Camera* camera;
 float theta;
 sg_Vector3 speed = (sg_Vector3){0, 0, 0};
@@ -68,6 +72,11 @@ void il_Graphics_init() {
 	for (i = 0; i < 6; i++) {
 		il_Common_Heightmap_Quad_divide(h->heightmap->root, 0, NULL);
 	}
+  
+  trimesh = il_Graphics_Trimesh_new(
+    il_Common_FaceMesh_fromAsset(il_Asset_open(il_Common_fromC("cube.obj"))),
+    0, 0, 0
+  );
 	
 	il_Event_register(IL_INPUT_KEYDOWN, (il_Event_Callback)&handleKeyDown);
 	il_Event_register(IL_INPUT_KEYUP, (il_Event_Callback)&handleKeyUp);
@@ -92,6 +101,8 @@ void il_Graphics_draw() {
 	glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
 
 	h->drawable.draw(&h->drawable);
+  
+  trimesh->drawable.draw(&trimesh->drawable);
 
 	SDL_GL_SwapBuffers();
 }

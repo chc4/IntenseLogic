@@ -126,6 +126,11 @@ Returns the cross product of the two vectors.
 sg_Vector3 sg_Vector3_cross(sg_Vector3 a, sg_Vector3 b);
 
 
+typedef struct sg_Vector4 {
+  float x, y, z, w;
+} sg_Vector4;
+
+
 /* Typedef: sg_Matrix
 Represents a 4x4 matrix for use in transformation, rotation, and scaling.
 

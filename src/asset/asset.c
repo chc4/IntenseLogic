@@ -28,7 +28,7 @@ struct SearchPath {
 };
 
 struct SearchPath *first;
-il_Common_String writedir;
+il_Common_String writedir = ".";
 
 void il_Asset_init() {
 
@@ -141,7 +141,14 @@ il_Asset_Asset* il_Asset_open(il_Common_String path) {
   return asset;
 }
 
+const il_Common_String il_Asset_getName(il_Asset_Asset* asset) {
+  return asset->path;
+}
+
 FILE* il_Asset_getHandle(il_Asset_Asset* asset) { 
+
+  if (asset == NULL)
+    return NULL;
 
   asset->handlerefs++;
 

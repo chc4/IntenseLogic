@@ -7,9 +7,10 @@ fi;
 echo "Compiler: $CC";
 
 INCLUDES="$INCLUDES -I. -I../include"
-CFLAGS="$CFLAGS -Wall -pg -DDEBUG $INCLUDES"
+CFLAGS="$CFLAGS -Wall -pg -g -DDEBUG $INCLUDES"
 CFLAGS="$CFLAGS `sdl-config --cflags`"
-LDFLAGS="$LDFLAGS -Llib/ -lSOIL -lm -pg $INCLUDES"
+CFLAGS="$CFLAGS -DGLEW_BUILD"
+LDFLAGS="$LDFLAGS -Llib/ -lSOIL -lglew32 -lm -pg -g $INCLUDES"
 #LDFLAGS="$LDFLAGS `sdl-config --libs`"
 
 echo "INCLUDES: $INCLUDES";
