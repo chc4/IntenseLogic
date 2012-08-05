@@ -64,14 +64,14 @@ void il_Asset_registerReadDir(il_Common_String path, int priority) {
 
 il_Common_String search_paths(il_Common_String path) {
   struct SearchPath *cur = first;
-  char *dir = malloc(path.length+1);
-  char *base = malloc(path.length+1);
-  strncpy(dir,path.data,path.length);
-  strncpy(base,path.data,path.length);
-  dir[path.length] = 0;
-  base[path.length] = 0;
-  dir = dirname(dir);
-  base = basename(base);
+  char *dirm = malloc(path.length+1);
+  char *basem = malloc(path.length+1);
+  strncpy(dirm,path.data,path.length);
+  strncpy(basem,path.data,path.length);
+  dirm[path.length] = 0;
+  basem[path.length] = 0;
+  char* dir = dirname(dirm);
+  char* base = basename(basem);
   while (cur) {
     
     // path ~ '/' ~ dir ~ 0
@@ -109,8 +109,8 @@ il_Common_String search_paths(il_Common_String path) {
     closedir(dp);
     cur = cur->next;
   }
-  free(dir);
-  free(base);
+  free(dirm);
+  free(basem);
   return (il_Common_String){0, NULL};
 }
 
