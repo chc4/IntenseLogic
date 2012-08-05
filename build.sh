@@ -10,7 +10,7 @@ INCLUDES="$INCLUDES -I. -I../include"
 CFLAGS="$CFLAGS -Wall -pg -g -DDEBUG $INCLUDES"
 CFLAGS="$CFLAGS `sdl-config --cflags`"
 CFLAGS="$CFLAGS -DGLEW_BUILD"
-LDFLAGS="$LDFLAGS -Llib/ -lSOIL -lglew32 -lm -pg -g $INCLUDES"
+LDFLAGS="$LDFLAGS -Llib/ -lm -pg -g $INCLUDES"
 #LDFLAGS="$LDFLAGS `sdl-config --libs`"
 
 echo "INCLUDES: $INCLUDES";
@@ -20,11 +20,11 @@ echo "LDFLAGS: $LDFLAGS";
 if $(test $1 = "mingw"); then
 EXTENSION=.exe
 LINKSUFFIX=.dll
-LDFLAGS="$LDFLAGS -static-libgcc -static -llua -lopengl32"
+LDFLAGS="$LDFLAGS -static-libgcc -static -llua -lglew32 -lopengl32"
 echo "Target: mingw";
 else
 LINKSUFFIX=.so
-LDFLAGS="$LDFLAGS -llua5.1 -lc -lGL -lSDL"
+LDFLAGS="$LDFLAGS -llua5.1 -lc -lGL -lGLEW -lSDL"
 echo "Target: linux";
 fi;
 

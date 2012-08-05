@@ -28,7 +28,7 @@ struct SearchPath {
 };
 
 struct SearchPath *first;
-il_Common_String writedir = ".";
+il_Common_String writedir = (il_Common_String){1,"."};
 
 void il_Asset_init() {
 
