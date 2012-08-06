@@ -14,6 +14,8 @@ void il_Asset_registerReadDir(il_Common_String path, int priority);
 
 il_Asset_Asset* il_Asset_open(il_Common_String path);
 
+il_Common_String il_Asset_read(il_Asset_Asset* asset);
+
 const il_Common_String il_Asset_getName(il_Asset_Asset* asset);
 
 FILE* il_Asset_getHandle(il_Asset_Asset* asset);

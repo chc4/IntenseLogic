@@ -14,6 +14,12 @@ il_Graphics_Camera* il_Graphics_Camera_new() {
 	il_Graphics_Camera* camera = malloc(sizeof(il_Graphics_Camera));
 	il_Common_Positionable* positionable = malloc(sizeof(il_Common_Positionable));
 	positionable->position = (sg_Vector3){0, 0, 0};
+  positionable->rotation = (sg_Matrix) {
+    { 1, 0, 0, 0,
+      0, 1, 0, 0,
+      0, 0, 1, 0,
+      0, 0, 0, 1 }
+  };
 	camera->positionable = positionable;
 	return camera;
 }

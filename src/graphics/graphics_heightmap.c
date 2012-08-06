@@ -1,5 +1,7 @@
 #include "heightmap.h"
+
 #include "drawable3d.h"
+#include "graphics/camera.h"
 
 #ifdef __APPLE__
 #include <OpenGL/OpenGL.h>
@@ -13,7 +15,7 @@
 
 void drawquad(il_Common_Heightmap_Quad* quad, float x, float y, float s);
 
-void drawMap(il_Graphics_Drawable3d* map) {
+void drawMap(il_Graphics_Drawable3d* map, il_Graphics_Camera *cam) {
   il_Graphics_Heightmap* map2 = (il_Graphics_Heightmap*)map;
 	/*if (!map2->vbo) {
     il_Graphics_Heightmap_redraw(map2);

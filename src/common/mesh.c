@@ -49,7 +49,7 @@
   
 }*/
 
-int loadobj(il_Asset_Asset * asset, il_Common_FaceMesh ** mesh) {
+/*int loadobj(il_Asset_Asset * asset, il_Common_FaceMesh ** mesh) {
 
   il_Common_FaceMesh *m = malloc(sizeof(il_Common_FaceMesh));
   
@@ -67,31 +67,32 @@ int loadobj(il_Asset_Asset * asset, il_Common_FaceMesh ** mesh) {
   struct vnode {
     sg_Vector4 val;
     struct vnode *prev;
-  } *vcur;
+  } *vcur = NULL;
   
   struct vtnode {
     sg_Vector3 val;
     struct vtnode *prev;
-  } *vtcur;
+  } *vtcur = NULL;
   
   struct vnnode {
     sg_Vector3 val;
     struct vnnode *prev;
-  } *vncur;
+  } *vncur = NULL;
   
   struct fnode {
     size_t len;
     struct face* val;
     struct fnode *prev;
-  } *fcur;
+  } *fcur = NULL;
 
-  int line_number;
-  while (1) {
+  int line_number = 0;
+  int is_done = 0;
+  while (!is_done) {
     line_number++;
     size_t size = 1024;
     int len = 0;
     char *line = malloc(size);
-    int c;
+    int c = fgetc(handle);
     while ( c != '\n' && c != EOF) {
       if (len >= size) {
         size *= 2;
@@ -103,6 +104,8 @@ int loadobj(il_Asset_Asset * asset, il_Common_FaceMesh ** mesh) {
       len++;
       c = fgetc(handle);
     }
+    if (c == EOF)
+      is_done = 1;
     line[len] = '\0';
     len++;
     
@@ -110,9 +113,9 @@ int loadobj(il_Asset_Asset * asset, il_Common_FaceMesh ** mesh) {
       goto end;
     
     int offset, offset2, offset3;
-    if ((offset=sscanf(line, "v %f", &v.x))) {
-      if ((offset2=sscanf(line+offset, " %f", &v.y)))
-        if ((offset3=sscanf(line+offset+offset2, " %f", &v.z)))
+    if (sscanf(line, "v %f%n", &v.x, &offset)) {
+      if (sscanf(line+offset, " %f%n", &v.y, &offset2))
+        if (sscanf(line+offset+offset2, " %f%n", &v.z, &offset3))
           sscanf(line+offset+offset2+offset3, " %f", &v.w);
       struct vnode *node = malloc(sizeof(struct vnode));
       node->val = v;
@@ -121,8 +124,8 @@ int loadobj(il_Asset_Asset * asset, il_Common_FaceMesh ** mesh) {
       v = (sg_Vector4){0,0,0,1};
       goto end;
     }
-    if ((offset=sscanf(line, "vt %f", &vt.x))) {
-      if ((offset2=sscanf(line+offset, " %f", &vt.y)))
+    if (sscanf(line, "vt %f%n", &vt.x, &offset)) {
+      if (sscanf(line+offset, " %f%n", &vt.y, &offset2))
         sscanf(line+offset+offset2, " %f", &vt.z);
       struct vtnode *node = malloc(sizeof(struct vtnode));
       node->val = vt;
@@ -139,10 +142,23 @@ int loadobj(il_Asset_Asset * asset, il_Common_FaceMesh ** mesh) {
       vn = (sg_Vector3){0,0,0};
       goto end;
     }
-    if ((offset=sscanf(line, "f"))) {
+    if (line[0] == 'f') {
+      offset = 2;
       char* verts[16];
       int i = 0;
-      while (sscanf(line+offset, " %as", &verts[i])) i++;
+      char n = 0;
+      while (line[offset+n] != 0) {
+      
+        n = 0;
+        while (line[offset+n] != ' ' && line[offset+n] != 0) n++;
+        
+        n--;
+      
+        verts[i] = malloc(n);
+        strncpy(verts[i], &line[offset], n);
+        offset += ++n;
+        i++;
+      }
       
       struct fnode *node = malloc(sizeof(struct fnode));
       node->len = i;
@@ -151,13 +167,13 @@ int loadobj(il_Asset_Asset * asset, il_Common_FaceMesh ** mesh) {
       
       int j;
       for (j = 0; j < i; j++) {
-        if (!(offset2=sscanf(verts[j], "%i", &f.v))) {
-          il_Common_log(2, "Vertex for face value is not a float at %s:%u column %u.", 
+        if (!sscanf(verts[j], "%i%n", &f.v, &offset2)) {
+          il_Common_log(2, "Vertex for face value is not an integer at %s:%u column %u.", 
                         il_Asset_getName(asset), line_number, offset+i+j);
           goto end;
         }
         
-        offset3=sscanf(verts[j]+offset2, "/%i", &f.vt);
+        sscanf(verts[j]+offset2, "/%i%n", &f.vt, &offset3);
         sscanf(verts[j]+offset2+offset3, "/%i", &f.vn);
         
         node->val[j] = f;
@@ -168,7 +184,10 @@ int loadobj(il_Asset_Asset * asset, il_Common_FaceMesh ** mesh) {
       goto end;
     }
     
-    il_Common_log(2, "Unrecognised line in OBJ file %s:%u.", il_Asset_getName(asset), line_number);
+    il_Common_log ( 4, 
+                    "Unrecognised line in OBJ file %s:%u: \"%s\"\n", 
+                    il_Common_toC(il_Asset_getName(asset)), 
+                    line_number, line );
     
    end: 
     free(line);
@@ -251,10 +270,10 @@ int loadobj(il_Asset_Asset * asset, il_Common_FaceMesh ** mesh) {
   
   return 0;
   
-}
+}*/
 
 il_Common_FaceMesh * il_Common_FaceMesh_fromAsset(il_Asset_Asset * asset) {
-  il_Common_FaceMesh *m;
-  loadobj(asset, &m);
+  il_Common_FaceMesh *m = NULL;
+  //loadobj(asset, &m);
   return m;
 }

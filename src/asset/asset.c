@@ -141,6 +141,24 @@ il_Asset_Asset* il_Asset_open(il_Common_String path) {
   return asset;
 }
 
+il_Common_String il_Asset_read(il_Asset_Asset* asset) {
+  FILE *fptr = il_Asset_getHandle(asset);
+  size_t length;
+  il_Common_String buf;
+
+  if (!fptr) /* Return NULL on failure */
+    return (il_Common_String){0,NULL};
+  fseek(fptr, 0, SEEK_END); /* Seek to the end of the file */
+  length = ftell(fptr); /* Find out how many bytes into the file we are */
+  buf.data = malloc(length); /* Allocate a buffer for the entire length of the file */
+  buf.length = length;
+  fseek(fptr, 0, SEEK_SET); /* Go back to the beginning of the file */
+  buf.length = fread(buf.data, 1, length, fptr); /* Read the contents of the file in to the buffer */
+  fclose(fptr); /* Close the file */
+
+  return buf; /* Return the buffer */
+}
+
 const il_Common_String il_Asset_getName(il_Asset_Asset* asset) {
   return asset->path;
 }

@@ -19,6 +19,8 @@ typedef struct il_Graphics_Trimesh {
   GLuint num;
 } il_Graphics_Trimesh;
 
-il_Graphics_Trimesh * il_Graphics_Trimesh_new(const il_Common_FaceMesh * mesh, GLuint vert, GLuint frag, GLuint geom);
+il_Graphics_Trimesh * il_Graphics_Trimesh_new ( const il_Common_Positionable * positionable, 
+                                                const il_Common_FaceMesh * mesh, 
+                                                GLuint vert, GLuint frag, GLuint geom );
 
 #endif

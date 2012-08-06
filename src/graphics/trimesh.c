@@ -1,18 +1,30 @@
 #include "trimesh.h"
 
-#include "common/log.h"
-
 #include <stdlib.h>
 
-void trimesh_draw(il_Graphics_Drawable3d * drawable) {
+#include "common/log.h"
+#include "graphics/camera.h"
+
+void trimesh_draw(il_Graphics_Drawable3d * drawable, il_Graphics_Camera* camera) {
   il_Graphics_Trimesh *this = (il_Graphics_Trimesh*)drawable;
   
   glUseProgramObjectARB(this->drawable.program);
+  
+  glUniform3fv ( glGetUniformLocation(this->drawable.program, "camera.position"),
+                 1,
+                 (const GLfloat*)&camera->positionable->position );
+  glUniformMatrix4fv ( glGetUniformLocation(this->drawable.program, "camera.rotation"), 
+                       1, 
+                       GL_TRUE, 
+                       (const GLfloat*)&camera->positionable->rotation );
+  
   glDrawArrays(this->mode, 0, this->num);
 }
 
-il_Graphics_Trimesh * il_Graphics_Trimesh_new(const il_Common_FaceMesh * mesh, GLuint vert, GLuint frag, GLuint geom) {
-  
+il_Graphics_Trimesh * il_Graphics_Trimesh_new ( const il_Common_Positionable * positionable, 
+                                                const il_Common_FaceMesh * mesh, 
+                                                GLuint vert, GLuint frag, GLuint geom ) {
+  //
   if (!GLEW_ARB_vertex_buffer_object) {
     il_Common_log(0, "Vertex buffer objects not supported. Update your GL to have GL_ARB_vertex_buffer_object.");
     exit(1);
@@ -30,8 +42,12 @@ il_Graphics_Trimesh * il_Graphics_Trimesh_new(const il_Common_FaceMesh * mesh, G
     sg_Vector3 normal;
   } *data = malloc(sizeof(struct point) * mesh->faces_len * 3);
   
+  if (sizeof(struct point) != sizeof(float) * 9) {
+    il_Common_log(0, "struct point isn't the size of its values");
+  }
+  
   int i;
-  il_Common_Face *cur;
+  il_Common_Face *cur = NULL;
   for (i = 0; i < mesh->faces_len; i++) {
     cur = &mesh->faces[i];
     if (cur->edges != 3) {
@@ -58,19 +74,19 @@ il_Graphics_Trimesh * il_Graphics_Trimesh_new(const il_Common_FaceMesh * mesh, G
   
   il_Graphics_Trimesh *trimesh = malloc(sizeof(il_Graphics_Trimesh));
   trimesh->mode = GL_TRIANGLES;
-  trimesh->num = mesh->faces_len;
+  trimesh->num = mesh->faces_len * 3;
   trimesh->drawable.draw = &trimesh_draw;
   
   glGenBuffersARB(1, &trimesh->vbo);
   glBindBufferARB(GL_ARRAY_BUFFER_ARB, trimesh->vbo);
-  glBufferDataARB(GL_ARRAY_BUFFER_ARB, sizeof(struct point) * mesh->faces_len, data, GL_STATIC_DRAW_ARB);
+  glBufferDataARB(GL_ARRAY_BUFFER_ARB, sizeof(struct point) * mesh->faces_len * 3, data, GL_STATIC_DRAW_ARB);
   free(data);
   
   /* void glVertexAttribPointer(GLuint index​, GLint size​, GLenum type​, 
      GLboolean normalized​, GLsizei stride​, const GLvoid * pointer​); */
-  glVertexAttribPointerARB(0, 3, GL_FLOAT, GL_FALSE, sizeof(struct point), (void*) (sizeof(float) * 0)); // vertices
-  glVertexAttribPointerARB(1, 2, GL_FLOAT, GL_FALSE, sizeof(struct point), (void*) (sizeof(float) * 3)); // texcoords
-  glVertexAttribPointerARB(2, 3, GL_FLOAT, GL_FALSE, sizeof(struct point), (void*) (sizeof(float) * 5)); // normals
+  glVertexAttribPointerARB(0, 4, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*) (sizeof(float) * 0)); // vertices
+  glVertexAttribPointerARB(1, 2, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*) (sizeof(float) * 4)); // texcoords
+  glVertexAttribPointerARB(2, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*) (sizeof(float) * 6)); // normals
   
   glEnableVertexAttribArrayARB(0);
   glEnableVertexAttribArrayARB(1);
@@ -90,10 +106,20 @@ il_Graphics_Trimesh * il_Graphics_Trimesh_new(const il_Common_FaceMesh * mesh, G
     glAttachObjectARB(trimesh->drawable.program, frag);
   
   glBindAttribLocationARB(trimesh->drawable.program, 0, "in_Position");
-  glBindAttribLocationARB(trimesh->drawable.program, 0, "in_Texcoord");
-  glBindAttribLocationARB(trimesh->drawable.program, 0, "in_Normal");
+  glBindAttribLocationARB(trimesh->drawable.program, 1, "in_Texcoord");
+  glBindAttribLocationARB(trimesh->drawable.program, 2, "in_Normal");
   
   glLinkProgramARB(trimesh->drawable.program);
+  
+  GLint success;
+  glGetProgramiv(trimesh->drawable.program, GL_LINK_STATUS, &success);
+  if (!success) {
+    GLint length;
+    glGetProgramiv(trimesh->drawable.program, GL_INFO_LOG_LENGTH, &length);
+    GLchar *buf = malloc(length * sizeof(GLchar));
+    glGetProgramInfoLog(trimesh->drawable.program, length, NULL, buf);
+    il_Common_log(1, "Shader program link failed: %s\n", (char*)buf);
+  }
   
   return trimesh;
 }
