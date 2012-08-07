@@ -10,31 +10,13 @@ typedef struct il_Event_Event {
   uint8_t data[];
 } il_Event_Event;
 
-typedef struct il_Event_Node {
-  il_Event_Event* event;
-  struct il_Event_Node *next;
-} il_Event_Node;
-
-il_Event_Node *il_Event_EventQueue_first;
-il_Event_Node *il_Event_EventQueue_last;
+typedef void(*il_Event_Callback)(const il_Event_Event*);
 
 void il_Event_push(const il_Event_Event* event);
 
 void il_Event_pushnew(unsigned id, size_t size, const void * data);
 
 const il_Event_Event* il_Event_pop();
-
-
-typedef void(*il_Event_Callback)(il_Event_Event*);
-
-typedef struct il_Event_CallbackContainer {
-  uint16_t eventid;
-  size_t length;
-  il_Event_Callback* callbacks;
-} il_Event_CallbackContainer;
-
-il_Event_CallbackContainer *il_Event_Callbacks;
-size_t il_Event_Callbacks_len;
 
 void il_Event_handle(il_Event_Event* ev);
 

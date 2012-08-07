@@ -79,8 +79,9 @@ void update() {
   }
   
   // handle events
-  while (il_Event_EventQueue_first != NULL) {
-    il_Event_handle((il_Event_Event*)il_Event_pop());
+  const il_Event_Event* ev;
+  while ((ev = il_Event_pop())) {
+    il_Event_handle((il_Event_Event*)ev);
     //printf("test\n");
   }
 }

@@ -5,6 +5,23 @@
 
 #include "common/log.h"
 
+typedef struct il_Event_Node {
+  il_Event_Event* event;
+  struct il_Event_Node *next;
+} il_Event_Node;
+
+il_Event_Node *il_Event_EventQueue_first;
+il_Event_Node *il_Event_EventQueue_last;
+
+typedef struct il_Event_CallbackContainer {
+  uint16_t eventid;
+  size_t length;
+  il_Event_Callback* callbacks;
+} il_Event_CallbackContainer;
+
+il_Event_CallbackContainer *il_Event_Callbacks;
+size_t il_Event_Callbacks_len;
+
 void il_Event_push(const il_Event_Event* event) {
   struct il_Event_Node *node = malloc(sizeof(struct il_Event_Node));
   
