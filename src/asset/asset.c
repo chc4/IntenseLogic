@@ -185,10 +185,10 @@ void il_Asset_close(il_Asset_Asset* asset) {
   asset->handlerefs--;
   asset->refs--;
   
-  if (asset->handlerefs < 0)
+  /*if (asset->handlerefs < 0)
     asset->handlerefs = 0;
   if (asset->refs < 0)
-    asset->refs = 0;
+    asset->refs = 0;*/
   
   if (asset->handlerefs == 0)
     fclose(asset->handle);

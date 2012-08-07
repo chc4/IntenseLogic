@@ -13,6 +13,7 @@
 typedef struct il_Graphics_Trimesh {
   il_Graphics_Drawable3d drawable;
   GLuint vbo;
+  GLuint vao;
   GLenum mode;
   GLuint num;
 } il_Graphics_Trimesh;

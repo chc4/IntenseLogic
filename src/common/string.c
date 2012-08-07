@@ -3,14 +3,14 @@
 #include <stdlib.h>
 #include <stdarg.h>
 
-char *il_Common_toC(const il_Common_String s) {
+const char *il_Common_toC(const il_Common_String s) {
   char *z = malloc(s.length+1);
   strncpy(z, s.data, s.length);
   z[s.length] = (char)0;
   return z;
 }
 
-il_Common_String il_Common_concatfunc(const il_Common_String s, ...) {
+const il_Common_String il_Common_concatfunc(const il_Common_String s, ...) {
 
   il_Common_String str = {0,NULL};
 

@@ -15,10 +15,10 @@ typedef struct il_Common_OctetString {
 
 #define il_Common_fromC(s) ((il_Common_String){strlen(s), s})
 
-char *il_Common_toC(const il_Common_String s);
+const char *il_Common_toC(const il_Common_String s);
 
 #define il_Common_concat(...) (il_Common_concatfunc(__VA_ARGS__, (il_Common_String){0,NULL}))
 
-il_Common_String il_Common_concatfunc(const il_Common_String s, ...);
+const il_Common_String il_Common_concatfunc(const il_Common_String s, ...);
 
 #endif

@@ -20,6 +20,8 @@ il_Event_Node *il_Event_EventQueue_last;
 
 void il_Event_push(const il_Event_Event* event);
 
+void il_Event_pushnew(unsigned id, size_t size, void * data);
+
 const il_Event_Event* il_Event_pop();
 
 

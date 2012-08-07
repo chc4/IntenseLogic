@@ -1,8 +1,6 @@
-if (test -e CC); then
-CC="$CC";
-else
+#!/usr/bin/env bash
+#: ${CC:-gcc};
 CC=gcc;
-fi;
 
 echo "Compiler: $CC";
 

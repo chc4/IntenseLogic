@@ -21,6 +21,8 @@
 #include "common/log.h"
 #include "common/mesh.h"
 
+extern time_t time(time_t *);
+
 SDL_Surface* canvas;
 int width = 800;
 int height = 600;
@@ -153,20 +155,26 @@ void il_Graphics_init() {
   mesh->faces_len = 6;
   mesh->faces = malloc(sizeof(il_Common_Face) * 6);
   
-  unsigned points[6][4] = {
-    {0, 1, 2, 3},
-    {4, 7, 6, 5},
-    {0, 4, 5, 1},
-    {1, 5, 6, 2},
-    {2, 6, 7, 3},
-    {4, 0, 3, 7}
+  unsigned points[12][3] = {
+    {0, 1, 2},
+    {1, 2, 3},
+    {4, 7, 6},
+    {7, 6, 5},
+    {0, 4, 5},
+    {4, 5, 1},
+    {1, 5, 6},
+    {5, 6, 2},
+    {2, 6, 7},
+    {6, 7, 3},
+    {4, 0, 3},
+    {0, 3, 7}
   };
   
   #define face(x) \
   mesh->faces[x].edges = 3;\
-  mesh->faces[x].points = malloc(4 * sizeof(unsigned));\
-  memcpy(mesh->faces[x].points, &points[x], sizeof(unsigned) * 4);\
-  mesh->faces[x].texcoords = calloc(sizeof(unsigned), 4);\
+  mesh->faces[x].points = malloc(3 * sizeof(unsigned));\
+  memcpy(mesh->faces[x].points, &points[x], sizeof(unsigned) * 3);\
+  mesh->faces[x].texcoords = calloc(sizeof(unsigned), 3);\
   mesh->faces[x].normal = 0;
   
   face(0);
@@ -175,6 +183,12 @@ void il_Graphics_init() {
   face(3);
   face(4);
   face(5);
+  face(6);
+  face(7);
+  face(8);
+  face(9);
+  face(10);
+  face(11);
   
   trimesh = il_Graphics_Trimesh_new(
     positionable,

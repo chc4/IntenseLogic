@@ -258,10 +258,10 @@
     face.texcoords = malloc(sizeof(unsigned) * fcur->len);
     int j;
     for (j=0; j < fcur->len; j++) {
-      face.points[j] = fcur->val[j].v;
-      face.texcoords[j] = fcur->val[j].vt;
+      face.points[j] = fcur->val[j].v - 1;
+      face.texcoords[j] = fcur->val[j].vt - 1;
     }
-    face.normal = fcur->val[0].vn;
+    face.normal = fcur->val[0].vn - 1;
     i++;
     fcur = fcur->prev;
   }
