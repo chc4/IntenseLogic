@@ -1,10 +1,9 @@
 #include <stdlib.h>
 #include <time.h>
+#include <GL/glew.h>
 #ifdef __APPLE__
 #include <OpenGL/OpenGL.h>
 #include <OpenGL/gl.h>
-#else
-#include <GL/glew.h>
 #endif
 
 #include "SDL/SDL.h"
@@ -167,7 +166,7 @@ void il_Graphics_init() {
   mesh->faces[x].edges = 3;\
   mesh->faces[x].points = malloc(4 * sizeof(unsigned));\
   memcpy(mesh->faces[x].points, &points[x], sizeof(unsigned) * 4);\
-  mesh->faces[x].texcoords = malloc(4 * sizeof(unsigned));\
+  mesh->faces[x].texcoords = calloc(sizeof(unsigned), 4);\
   mesh->faces[x].normal = 0;
   
   face(0);

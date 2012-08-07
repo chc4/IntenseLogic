@@ -51,7 +51,7 @@ il_Graphics_Trimesh * il_Graphics_Trimesh_new ( const il_Common_Positionable * p
   for (i = 0; i < mesh->faces_len; i++) {
     cur = &mesh->faces[i];
     if (cur->edges != 3) {
-      il_Common_log(1, "Unexpected number of faces in triangle mesh: %u", cur->edges);
+      il_Common_log(1, "Unexpected number of faces in triangle mesh: %zu", cur->edges);
     }
     
     data[i * 3] = (struct point) {

@@ -1,12 +1,10 @@
 #ifndef IL_GRAPHICS_TRIMESH_H
 #define IL_GRAPHICS_TRIMESH_H
 
+#include <GL/glew.h>
 #ifdef __APPLE__
 #include <OpenGL/OpenGL.h>
 #include <OpenGL/gl.h>
-#else
-//#include <GL/gl.h>
-#include <GL/glew.h>
 #endif
 
 #include "common/mesh.h"

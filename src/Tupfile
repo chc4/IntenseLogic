@@ -7,7 +7,7 @@ INCLUDES += -I. -I../include
 CFLAGS += -Wall -DDEBUG -pg -g $(INCLUDES)
 CFLAGS += -DGLEW_BUILD
 #CFLAGS += -DdDOUBLE
-LDFLAGS += -pg -g -lm -llua -lSDL -lIL
+LDFLAGS += -pg -g -lm -llua -lSDL -lIL -lglew
 
 include @(TUP_PLATFORM).tup
 
