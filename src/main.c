@@ -49,26 +49,29 @@ void update() {
   while (SDL_PollEvent(&sdlEvent)) {
     switch (sdlEvent.type) {
     case (SDL_QUIT): {
-      il_Event_Event* quit = malloc(sizeof(il_Event_Event));
+      /*il_Event_Event* quit = malloc(sizeof(il_Event_Event));
       quit->eventid = IL_BASE_SHUTDOWN;
       quit->size = 0;
-      il_Event_push(quit);
+      il_Event_push(quit);*/
+      il_Event_pushnew(IL_BASE_SHUTDOWN, 0, NULL);
 	  break;
     }
 	case (SDL_KEYDOWN): {
-      il_Event_Event* keyDown = malloc(sizeof(il_Event_Event));
+      /*il_Event_Event* keyDown = malloc(sizeof(il_Event_Event));
       keyDown->eventid = IL_INPUT_KEYDOWN;
       keyDown->size = 0;
 	  *(int*)&keyDown->data = sdlEvent.key.keysym.sym;
-      il_Event_push(keyDown);
+      il_Event_push(keyDown);*/
+      il_Event_pushnew(IL_INPUT_KEYDOWN, sizeof(int), (void*)&sdlEvent.key.keysym.sym);
 	  break;
     }
 	case (SDL_KEYUP): {
-      il_Event_Event* keyUp = malloc(sizeof(il_Event_Event));
+      /*il_Event_Event* keyUp = malloc(sizeof(il_Event_Event));
       keyUp->eventid = IL_INPUT_KEYUP;
       keyUp->size = 0;
 	  *(int*)&keyUp->data = sdlEvent.key.keysym.sym;
-      il_Event_push(keyUp);
+      il_Event_push(keyUp);*/
+      il_Event_pushnew(IL_INPUT_KEYUP, sizeof(int), (void*)&sdlEvent.key.keysym.sym);
 	  break;
     }
 	default:;

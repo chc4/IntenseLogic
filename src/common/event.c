@@ -18,7 +18,7 @@ void il_Event_push(const il_Event_Event* event) {
     il_Event_EventQueue_first = node;
 }
 
-void il_Event_pushnew(unsigned id, size_t size, void * data) {
+void il_Event_pushnew(unsigned id, size_t size, const void * data) {
   il_Event_Event *ev = malloc(sizeof(il_Event_Event) + size);
   if (id > 65535) il_Common_log(1, "Event ID is out of bounds: %u\n", id);
   ev->eventid = (uint8_t)id;
@@ -46,6 +46,8 @@ const il_Event_Event* il_Event_pop() {
 }
 
 void il_Event_handle(il_Event_Event* ev) {
+  if (ev == NULL)
+    return;
   int i;
   struct il_Event_CallbackContainer* container = NULL;
   for (i = 0; i < il_Event_Callbacks_len; i++) {
