@@ -4,7 +4,7 @@
 # XDimension Software, LLC
 # http://www.xdsoft.com/explorer/
 # 
-mtllib teapot.mtl
+mtllib demos/teapots/teapot.mtl
 # object Teapot01
 g Teapot01
 v 3.5 6 -2.62268e-07
