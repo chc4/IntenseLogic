@@ -121,13 +121,12 @@ function lua_dispatch(data, ctx)
 end
 
 --- Registers an event to be called when an event fires
--- @tparam registry registry The registry to watch
--- @tparam string name The name of the event to watch for
+-- @tparam handler handler The handler to register
 -- @tparam func fn The function to call
 function event.register(handler, fn)
-    assert(ffi.istype("ilE_handler", handler), "Expected handler, got "..type(handler))
-    assert(handler ~= nil, "Expected handler, got NULL")
-    assert(type(fn) == "function", "Expected function, got "..type(fn))
+    assert(ffi.istype("ilE_handler", handler), "Bad argument #1: Expected handler, got "..type(handler))
+    assert(handler ~= nil, "Bad argument #1: Expected handler, got NULL")
+    assert(type(fn) == "function", "Bad argument #1: Expected function, got "..type(fn))
 
     local key = tostring(ffi.cast("void*", handler)) --string.format("%p", handler);
     local info = debug.getinfo(fn, "n")
