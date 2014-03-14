@@ -16,7 +16,7 @@ ffi.metatype('il_vector', {
 })
 
 function vector.get(self, k)
-    assert(type(k) == "number")
+    assert(type(k) == "number","Bad argument #2: Expected number, got "..type(k))
     if not storage then storage = require 'common.storage' end
     return storage.unpack(modules.common.il_vector_get(self, k))
 end
