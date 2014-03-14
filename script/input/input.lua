@@ -68,7 +68,7 @@ function input.get(key)
     elseif type(key) == "number" then
         return modules.input.ilI_getKey(key, ret) == 1, ret[0]
     else
-        error("Invalid type for input.get")
+        error( "Bad argument #1: Expected string or number, got "..type(key))
     end
 end
 
