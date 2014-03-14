@@ -68,8 +68,7 @@ event.shutdownCallbacks = modules.common.ilE_shutdownCallbacks
 event.shutdownHandlers = modules.common.ilE_shutdownHandlers
 
 --- Fires off an event
--- @tparam registry registry The registry (and all that registry's parents) to send the event to
--- @tparam string name The event to fire
+-- @tparam handler handler The event to fire
 -- @param ... Data to pass with the event
 function event.fire(handler, ...)
     local t = {...}
