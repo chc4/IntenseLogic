@@ -58,12 +58,18 @@ input.mousescroll   = modules.input.ilI_globalHandler.mousescroll
 
 function input.get(key)
     local ret = ffi.new("int[1]")
-    local str = string.upper(key:gsub(" ", "_"))
-    local enum = keysyms["ILI_"..str] or 
-                 keysyms["ILI_MOUSE_"..str] or
-                 keysyms["ILI_JOY_"..str] or
-                 ffi.C.SDL_GetScancodeFromName(key)
-    return modules.input.ilI_getKey(enum, ret) == 1, ret[0]
+    if type(key) == "string" then
+        local str = string.upper(key:gsub(" ", "_"))
+        local enum = keysyms["ILI_"..str] or
+                    keysyms["ILI_MOUSE_"..str] or
+                    keysyms["ILI_JOY_"..str] or
+                    ffi.C.SDL_GetScancodeFromName(key)
+        return modules.input.ilI_getKey(enum, ret) == 1, ret[0]
+    elseif type(key) == "number" then
+        return modules.input.ilI_getKey(key, ret) == 1, ret[0]
+    else
+        error("Invalid type for input.get")
+    end
 end
 
 return input
