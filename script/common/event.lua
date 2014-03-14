@@ -141,6 +141,22 @@ function event.register(handler, fn)
     return fn
 end
 
+-- Returns the current index of any event registered to handler that calls fn. WARNING: Will be incorrect when the event list next changes
+-- @tparam handler The handler to search
+-- @tparam func fn The function to search for
+function event.get(handler,fn)
+    assert(ffi.istype("ilE_handler",handler), "Bad argument #1: Expected handler, got "..type(handler))
+    assert(handler ~= nil, "Bad argument #1: Expected handler, got NULL")
+    assert(type(fn) == "function", "Bad argument #1: Expected function, got "..type(fn))
+    local key = tostring(ffi.cast("void*", handler))
+    for i, v in pairs(callbacks[key]) do
+        if v == fn then
+            return i
+        end
+    end
+    error "Function has not been registed to handler"
+end
+
 -- Unregisters an event under the handler
 -- @tparam handler handler The hander to unregister
 -- @tparam int id The callback index to unregister
@@ -194,7 +210,7 @@ function event.create(arg, name)
     elseif type(arg) == "userdata" then -- FILE*
         error("File watching NYI")
     else
-        error("Expected nil, number, table, or FILE*")
+        error("Bad argument #1: Expected nil, number, table, or FILE*, got "..type(arg))
     end
     if name then
         modules.common.ilE_handler_name(h, name)
