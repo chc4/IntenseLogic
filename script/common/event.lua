@@ -141,7 +141,7 @@ function event.register(handler, fn)
     return fn
 end
 
--- Returns the current index of any event registered to handler that calls fn. WARNING: Will be incorrect when the event list next changes
+-- Returns all indexs for any event registered to handler that calls fn. WARNING: Will be incorrect when the event list next changes
 -- @tparam handler The handler to search
 -- @tparam func fn The function to search for
 function event.get(handler,fn)
@@ -149,12 +149,17 @@ function event.get(handler,fn)
     assert(handler ~= nil, "Bad argument #1: Expected handler, got NULL")
     assert(type(fn) == "function", "Bad argument #1: Expected function, got "..type(fn))
     local key = tostring(ffi.cast("void*", handler))
+    local cache = {}
     for i, v in pairs(callbacks[key]) do
         if v == fn then
-            return i
+            table.insert(cache,i)
         end
     end
-    error "Function has not been registed to handler"
+    if #cache > 0 then
+        return unpack(cache)
+    else
+        error "Function has not been registed to handler"
+    end
 end
 
 -- Unregisters an event under the handler
