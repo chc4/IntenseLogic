@@ -120,7 +120,7 @@ function lua_dispatch(data, ctx)
     end
 end
 
---- Registers an event to be called when an event fires
+--- Registers an event to be called when an handler fires
 -- @tparam handler handler The handler to register
 -- @tparam func fn The function to call
 function event.register(handler, fn)
@@ -141,7 +141,13 @@ function event.register(handler, fn)
     return fn
 end
 
+-- Unregisters an event under the handler
+-- @tparam handler handler The hander to unregister
+-- @tparam int id The callback index to unregister
 function event.unregister(handler, id)
+    assert(ffi.istype("ilE_handler", handler), "Bad argument #1: Expected handler, got "..type(handler))
+    assert(handler ~= nil, "Bad argument #1: Expected handler, got NULL")
+    assert(type(id) == "number","Bad argument #2: Expected number, got "..type(id))
     local key = tostring(ffi.cast("void*", handler))
     for i, v in pairs(callbacks[key]) do
         if v == id then
