@@ -68,9 +68,9 @@ local function index(t, k)
         return t.ptr.y
     elseif k == "z" then
         return t.ptr.z
-    elseif k == "len" then
+    elseif k == "len" or k == "magnitude" then
         return modules.math.il_vec3_len(t.ptr)
-    elseif k == "normal" then
+    elseif k == "normal" or k == "unit" then
         return vector3.wrap(modules.math.il_vec3_normal(t.ptr))
     elseif k == "vec4" then
         vector4 = vector4 or require "math.vector4"
